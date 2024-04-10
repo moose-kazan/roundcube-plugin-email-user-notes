@@ -1,0 +1,15 @@
+{
+    "name": "moose-kazan/email_user_notes",
+    "description": "Roundcube plugin: allow write note about your correspondents",
+    "type": "roundcube-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vadim Kalinnikov",
+            "email": "moose@ylsoftware.com"
+        }
+    ],
+    "require": {
+        "roundcube/plugin-installer": ">=0.1.6"
+    }
+}

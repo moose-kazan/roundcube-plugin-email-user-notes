@@ -3,9 +3,11 @@
 This plugin allows you to add notes to emails.
 
 ## Installation
-To install, get the plugin with composer in your roundcube directory
+To install, get the plugin with composer in your roundcube directory:
 
-Unpack archive.
+```
+composer require moose-kazan/email_user_notes
+```
 
 In `config.inc.php`, register the plugin with
 ```php

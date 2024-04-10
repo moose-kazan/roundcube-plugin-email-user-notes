@@ -1,0 +1,30 @@
+.email_user_note {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+
+	display: flex;
+}
+
+.email_user_note .icon {
+	width: 32px;
+	height: 32px;
+	background-image: url('assets/notes-54-64.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	margin-right: 10px;
+}
+
+.email_user_note .content {
+	flex-grow: 1;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.email_user_note .content textarea {
+	width: 100%;
+}
+
+.email_user_note .edit {
+	cursor: pointer;
+}

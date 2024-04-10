@@ -25,6 +25,10 @@ class email_user_notes extends rcube_plugin
 		$this->rc = rcmail::get_instance();
 
 		$this->config = $this->rc->config->get('email_user_notes');
+		
+		if (!$this->rc->config->get('message_show_email')) {
+			die("Please enable \"message_show_email\" setting first!");
+		}
 
 		$this->include_script('email_user_notes.js');
 		$this->include_stylesheet('email_user_notes.css');
@@ -32,11 +36,6 @@ class email_user_notes extends rcube_plugin
 		$this->add_hook('message_objects', array($this, 'message_objects'));
 		$this->register_action('email_user_notes.save_note', array($this, 'save_note'));
 
-		//print_r(get_object_vars($this->api)); 
-		//print_r(get_class_methods($this));
-		//if () {
-		//	die('');
-		//}
 	}
 
 	function message_objects($args)
@@ -47,12 +46,6 @@ class email_user_notes extends rcube_plugin
 		$sender = mb_strtolower($message->sender['mailto']);
 
 		$user_email = "";
-
-		//print_r(get_object_vars($message->headers));
-		//print_r(get_object_vars($this));
-		//print_r(get_class_methods($message));
-		//print_r($args['abort']);
-		//print_r(rcube_mime::decode_address_list($message->get_header('to')));
 
 		if ($current_user_email != $sender) {
 			$user_email = $sender;
@@ -102,7 +95,7 @@ class email_user_notes extends rcube_plugin
 	public function save_note()
 	{
 		$user_id = $this->rc->get_user_id();
-		$user_email = $_POST['user_email'];//print_r($_POST);
+		$user_email = rcube_utils::get_input_value('user_email', rcube_utils::INPUT_GPC);
 		$note = rcube_utils::get_input_value('note', rcube_utils::INPUT_GPC);
 
 		$this->get_dbh()->query('delete from email_user_notes where user_id = ? and user_email = ?', $user_id, $user_email);
@@ -112,7 +105,7 @@ class email_user_notes extends rcube_plugin
 	function get_dbh(): rcube_db
 	{
 		if (!isset($this->db)) {
-			if ($dsn = $this->config['dsn']) {
+			if ($dsn = $this->config['dsn'] ?? "") {
 				$this->db = rcube_db::factory($dsn);
 				$this->db->set_debug((bool)$this->rc->config->get('sql_debug'));
 				$this->db->db_connect('w');

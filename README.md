@@ -16,7 +16,7 @@ $config['plugins'] = [
 
 And allow full emails:
 
-```
+```php
 $config['message_show_email'] = true;
 ```
 

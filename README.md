@@ -1,6 +1,6 @@
 # Roundcube Email User Notes
 
-This plugin allows you to add notes to emails.
+This plugin allows you to add/show notes about sender(in INBOX)/recipient(in OUTBOX) of your emails.
 
 ## Installation
 To install, get the plugin with composer in your roundcube directory:
@@ -22,6 +22,9 @@ And allow full emails:
 $config['message_show_email'] = true;
 ```
 
+## Screenshots
+
+![Screenshot](./screenshot.png)
 
 ## License
 Permissively licensed under the MIT license

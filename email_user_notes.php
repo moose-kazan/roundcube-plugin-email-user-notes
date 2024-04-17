@@ -5,13 +5,13 @@
  *
  * This plugin allows you to add notes to emails.
  *
+ * Author: Vadim Kalinnikov <moose@ylsoftware.com>
+ *
  * @version 1.0
  * @license MIT License
- * @url
+ * @url https://github.com/moose-kazan/roundcube-plugin-email-user-notes
  * @package email_user_notes
  */
-
-// icon from: https://www.veryicon.com/icons/business/a-set-of-commercial-icons/notes-54.html 
 
 class email_user_notes extends rcube_plugin
 {
@@ -105,13 +105,7 @@ class email_user_notes extends rcube_plugin
 	function get_dbh(): rcube_db
 	{
 		if (!isset($this->db)) {
-			if ($dsn = $this->config['dsn'] ?? "") {
-				$this->db = rcube_db::factory($dsn);
-				$this->db->set_debug((bool)$this->rc->config->get('sql_debug'));
-				$this->db->db_connect('w');
-			} else {
-				$this->db = $this->rc->get_dbh();
-			}
+			$this->db = $this->rc->get_dbh();
 		}
 
 		$this->db->query('CREATE TABLE IF NOT EXISTS email_user_notes (

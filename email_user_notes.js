@@ -25,6 +25,7 @@ window.rcmail && rcmail.addEventListener('init', function(evt) {
 
 		window.rcmail.http_post('plugin.email_user_notes.save_note', {
 			user_email: $container.attr('data-user-email'),
+			user_id: $container.attr('data-user-id'),
 			note: content,
 		});
 

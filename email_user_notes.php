@@ -43,28 +43,38 @@ class email_user_notes extends rcube_plugin
 		$message = $args['message'];
 
 		$current_user_email = mb_strtolower($this->rc->get_user_email());
-		$sender = mb_strtolower($message->sender['mailto']);
+		$sender_email = mb_strtolower($message->sender['mailto']);
+
+		$to_emails = rcube_mime::decode_address_list($message->get_header('to'));
+		$to_email = array_shift($to_emails);
+		$receiver_email = mb_strtolower($to_email['mailto']);
 
 		$user_email = "";
+		$user_id = null;
 
 		//if ($current_user_email != $sender) {
 		if ($message->folder == "INBOX") {
-			$user_email = $sender;
+			$user_email = $sender_email;
+			$user_id = $this->get_user_id($receiver_email);
 		}
 		else {
-			$to_emails = rcube_mime::decode_address_list($message->get_header('to'));
-			$to_email = array_shift($to_emails);
-			$user_email = mb_strtolower($to_email['mailto']);
+			$user_email = $receiver_email;
+			$user_id = $this->get_user_id($sender_email);
+		}
+
+		if (!$user_id) {
+			$user_id = $this->rc->get_user_id();
 		}
 
 
-		$note = $this->get_note($this->rc->get_user_id(), $user_email);
+
+		$note = $this->get_note($user_id, $user_email);
 
 		$content = $args['content'];
 
 		$div = '
 		<div>
-			<div class="email_user_note" data-user-email="'.htmlspecialchars($user_email).'">
+			<div class="email_user_note" data-user-id="' . htmlspecialchars($user_id) . '" data-user-email="'.htmlspecialchars($user_email).'">
 				<div class="icon"></div>
 				<div class="content">
 					<div class="text">'.$note.'</div>
@@ -78,6 +88,18 @@ class email_user_notes extends rcube_plugin
 		array_push($content, $div);
 
 		return ['content' => $content];
+	}
+
+	public function get_user_id($user_email)
+	{
+		$db = $this->get_dbh();
+
+		$result = $db->query('select user_id from identities where del<>1 and standard = 1 and email = ?', $user_email);
+		$row = $db->fetch_assoc($result);
+
+		if (!$row)
+			return null;
+		return $row['user_id'];
 	}
 
 	public function get_note($user_id, $user_email)
@@ -95,7 +117,8 @@ class email_user_notes extends rcube_plugin
 
 	public function save_note()
 	{
-		$user_id = $this->rc->get_user_id();
+		//$user_id = $this->rc->get_user_id();
+		$user_id = rcube_utils::get_input_value('user_id', rcube_utils::INPUT_GPC);
 		$user_email = rcube_utils::get_input_value('user_email', rcube_utils::INPUT_GPC);
 		$note = rcube_utils::get_input_value('note', rcube_utils::INPUT_GPC);
 

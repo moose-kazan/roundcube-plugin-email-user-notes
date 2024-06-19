@@ -47,7 +47,8 @@ class email_user_notes extends rcube_plugin
 
 		$user_email = "";
 
-		if ($current_user_email != $sender) {
+		//if ($current_user_email != $sender) {
+		if ($message->folder == "INBOX") {
 			$user_email = $sender;
 		}
 		else {
